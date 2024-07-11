@@ -1,5 +1,5 @@
 // src/App.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import Board from './components/Board';
 import Keyboard from './components/Keyboard';
 import useWordle from './hooks/useWordle';
@@ -8,6 +8,25 @@ import './index.css';
 const App = () => {
   const correctWord = 'CRAWL';
   const { guesses, currentGuess, onKeyPress } = useWordle(correctWord);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      const { key, ctrlKey, altKey, metaKey } = event;
+      const upperKey = key.toUpperCase();
+      
+      if (!ctrlKey && !altKey && !metaKey) {
+        if (upperKey === 'ENTER' || upperKey === 'BACKSPACE' || /^[A-Z]$/.test(upperKey)) {
+          event.preventDefault();
+          onKeyPress(upperKey === 'BACKSPACE' ? 'DELETE' : upperKey);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onKeyPress]);
 
   return (
     <div className="App">

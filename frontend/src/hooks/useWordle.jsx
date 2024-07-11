@@ -13,10 +13,8 @@ const useWordle = (correctWord) => {
       }
     } else if (key === 'DELETE') {
       setCurrentGuess(currentGuess.slice(0, -1));
-    } else {
-      if (currentGuess.length < correctWord.length) {
-        setCurrentGuess(currentGuess + key);
-      }
+    } else if (currentGuess.length < correctWord.length && /^[A-Z]$/.test(key)) {
+      setCurrentGuess(currentGuess + key);
     }
   };
 
