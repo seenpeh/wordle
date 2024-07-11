@@ -1,2 +1,2 @@
 # wordle
-a wordle game clone
+a wordle game clone for you
