@@ -6,14 +6,19 @@ import useWordle from './hooks/useWordle';
 import './index.css';
 
 const App = () => {
-  const correctWord = 'REACT';
+  const correctWord = 'CRAWL';
   const { guesses, currentGuess, onKeyPress } = useWordle(correctWord);
 
   return (
     <div className="App">
       <h1>Wordle</h1>
       <Board guesses={guesses} currentGuess={currentGuess} correctWord={correctWord} />
-      <Keyboard onKeyPress={onKeyPress} />
+      <Keyboard 
+        onKeyPress={onKeyPress} 
+        guesses={guesses} 
+        currentGuess={currentGuess} 
+        correctWord={correctWord} 
+      />
     </div>
   );
 };

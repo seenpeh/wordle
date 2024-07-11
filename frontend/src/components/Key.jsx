@@ -1,9 +1,9 @@
 // src/components/Key.js
 import React from 'react';
 
-const Key = ({ letter, onClick }) => {
+const Key = ({ letter, onClick, status, wide }) => {
   return (
-    <button className="key" onClick={() => onClick(letter)}>
+    <button className={`key ${status} ${wide ? 'wide' : ''}`} onClick={() => onClick(letter)}>
       {letter}
     </button>
   );

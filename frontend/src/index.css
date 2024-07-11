@@ -43,6 +43,7 @@ body {
 
 .misplaced {
   background-color: yellow;
+  color: rgb(39, 39, 39);
 }
 
 .wrong {
@@ -69,4 +70,21 @@ body {
 
 .key:hover {
   background-color: #555;
+}
+
+.key.correct {
+  background-color: green;
+}
+
+.key.misplaced {
+  background-color: yellow;
+  color: rgb(39, 39, 39);
+}
+
+.key.wrong {
+  background-color: grey;
+}
+
+.key.wide {
+  width: 60px;
 }
