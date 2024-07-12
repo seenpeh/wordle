@@ -18,7 +18,15 @@ const useWordle = (correctWord) => {
     }
   };
 
-  return { guesses, currentGuess, onKeyPress };
+  const checkGuess = (guess) => {
+    return guess.split('').map((letter, i) => {
+      if (correctWord[i] === letter) return 'correct';
+      if (correctWord.includes(letter)) return 'misplaced';
+      return 'wrong';
+    });
+  };
+
+  return { guesses, currentGuess, onKeyPress, checkGuess };
 };
 
 export default useWordle;

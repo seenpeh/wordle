@@ -7,7 +7,7 @@ import './index.css';
 
 const App = () => {
   const correctWord = 'CRAWL';
-  const { guesses, currentGuess, onKeyPress } = useWordle(correctWord);
+  const { guesses, currentGuess, onKeyPress, checkGuess } = useWordle(correctWord);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -31,7 +31,7 @@ const App = () => {
   return (
     <div className="App">
       <h1>Wordle</h1>
-      <Board guesses={guesses} currentGuess={currentGuess} correctWord={correctWord} />
+      <Board guesses={guesses} currentGuess={currentGuess} correctWord={correctWord} checkGuess={checkGuess} />
       <Keyboard 
         onKeyPress={onKeyPress} 
         guesses={guesses} 
