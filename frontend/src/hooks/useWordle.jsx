@@ -1,9 +1,27 @@
-// src/hooks/useWordle.js
-import { useState } from 'react';
+// src/hooks/useWordle.jsx
+import { useState, useEffect } from 'react';
+import { getWords } from '../api/wordApi';
 
-const useWordle = (correctWord) => {
+const useWordle = () => {
   const [guesses, setGuesses] = useState([]);
   const [currentGuess, setCurrentGuess] = useState('');
+  const [correctWord, setCorrectWord] = useState('');
+
+  useEffect(() => {
+    const fetchWords = async () => {
+      try {
+        const data = await getWords();
+        const words = data.words;
+        if (words.length > 0) {
+          const randomWord = words[Math.floor(Math.random() * words.length)];
+          setCorrectWord(randomWord.toUpperCase());
+        }
+      } catch (error) {
+        console.error('Error fetching words:', error);
+      }
+    };
+    fetchWords();
+  }, []);
 
   const onKeyPress = (key) => {
     if (key === 'ENTER') {
@@ -18,15 +36,7 @@ const useWordle = (correctWord) => {
     }
   };
 
-  const checkGuess = (guess) => {
-    return guess.split('').map((letter, i) => {
-      if (correctWord[i] === letter) return 'correct';
-      if (correctWord.includes(letter)) return 'misplaced';
-      return 'wrong';
-    });
-  };
-
-  return { guesses, currentGuess, onKeyPress, checkGuess };
+  return { guesses, currentGuess, correctWord, onKeyPress };
 };
 
 export default useWordle;

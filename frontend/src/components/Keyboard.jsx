@@ -1,4 +1,4 @@
-// src/components/Keyboard.js
+// src/components/Keyboard.jsx
 import React from 'react';
 import Key from './Key';
 

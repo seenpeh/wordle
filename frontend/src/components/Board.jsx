@@ -1,4 +1,4 @@
-// src/components/Board.js
+// src/components/Board.jsx
 import React from 'react';
 import './Board.css';
 
