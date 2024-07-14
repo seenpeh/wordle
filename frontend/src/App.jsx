@@ -25,6 +25,26 @@ const App = () => {
     fetchWord();
   }, []);
 
+  // Load state from localStorage on initial mount
+  useEffect(() => {
+    const savedGuesses = JSON.parse(localStorage.getItem('guesses')) || [];
+    const savedCurrentGuess = localStorage.getItem('currentGuess') || '';
+
+    if (savedGuesses.length > 0) {
+      setGuesses(savedGuesses);
+    }
+
+    if (savedCurrentGuess) {
+      setCurrentGuess(savedCurrentGuess);
+    }
+  }, []);
+
+  // Save currentGuess and guesses to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('guesses', JSON.stringify(guesses));
+    localStorage.setItem('currentGuess', currentGuess);
+  }, [guesses, currentGuess]);
+
   const onKeyPress = (key) => {
     if (key === 'ENTER') {
       if (currentGuess.length === correctWord.length) {
@@ -38,6 +58,7 @@ const App = () => {
     }
   };
 
+  // Handle keydown events to update currentGuess
   useEffect(() => {
     const handleKeyDown = (event) => {
       const { key, ctrlKey, altKey, metaKey } = event;
