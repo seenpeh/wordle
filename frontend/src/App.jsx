@@ -1,12 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import Board from './components/Board';
 import Keyboard from './components/Keyboard';
+import Congratulations from './components/Congratulations';
 import './index.css';
 
 const App = () => {
   const [correctWord, setCorrectWord] = useState('');
   const [guesses, setGuesses] = useState([]);
   const [currentGuess, setCurrentGuess] = useState('');
+  const [isCorrectGuessed, setIsCorrectGuessed] = useState(false);
+  const [congratulatoryMessage, setCongratulatoryMessage] = useState('');
+
+  const messages = [
+    "Well done on achieving your goal! I guess miracles do happen.",
+    "Congrats! You've proven that persistence really can pay off... eventually.",
+    "Impressive work! I didn't think you'd actually follow through.",
+    "You did it! Now we just need to work on efficiency.",
+    "You've reached your goal! It only took twice as long as expected.",
+    "You guessed it! Who knew guessing could be your hidden talent?",
+    "Wow, you got it right! I guess even a stopped clock is right twice a day.",
+    "You guessed the word! I was starting to think you'd never get it.",
+    "Nice guess! Your random stabs in the dark finally paid off.",
+    "You guessed the word! I'm almost as surprised as you are.",
+    "You played the game so well! Beginner's luck must really love you.",
+    "Nice playing! Who knew you had such hidden potential?",
+    "Great job! You really exceeded my low expectations.",
+    "Well played! I didn't think you'd make it this far.",
+    "You did great! And here I thought you'd give up.",
+    "You found the solution! I knew you could do it... eventually.",
+    "Great job! I was starting to think we'd need a miracle.",
+    "You solved it! I didn't even have to bribe you with snacks.",
+    "Wow, you found the solution! I guess lightning does strike twice.",
+    "You did it! I’m almost as impressed as I am surprised.",
+    "Fantastic! You solved it without consulting Google... this time.",
+    "You found the solution! And it only took twice as long as expected.",
+    "You did it! Who knew you had a Sherlock Holmes in you?",
+    "Amazing! You found the solution and didn’t even break anything.",
+    "You solved it! I was getting ready to call in the experts.",
+    "Great job! I was starting to lose hope.",
+    "You found the solution! I’ll admit, I had my doubts.",
+    "You did it! I guess persistence really does pay off.",
+    "Nice work! I was expecting to be here all day.",
+    "You found the solution! Maybe you should try for Mensa next.",
+    "You did it! And here I thought we’d be stuck forever.",
+    "Amazing! You cracked it just before I ran out of patience.",
+    "You found the solution! I’m genuinely impressed and slightly confused.",
+    "Great job! Now, can you solve world peace next?",
+    "You did it! I guess even the most complex problems have simple solutions... eventually.",
+  ];
 
   // Fetch the correct word from the backend
   useEffect(() => {
@@ -29,26 +70,40 @@ const App = () => {
   useEffect(() => {
     const savedGuesses = JSON.parse(localStorage.getItem('guesses')) || [];
     const savedCurrentGuess = localStorage.getItem('currentGuess') || '';
+    const savedIsCorrectGuessed = localStorage.getItem('isCorrectGuessed') === 'true';
 
-    if (savedGuesses.length > 0) {
+    if (savedGuesses.length > 0 && !savedIsCorrectGuessed) {
       setGuesses(savedGuesses);
     }
 
-    if (savedCurrentGuess) {
+    if (savedCurrentGuess && !savedIsCorrectGuessed) {
       setCurrentGuess(savedCurrentGuess);
+    }
+
+    if (savedIsCorrectGuessed) {
+      setIsCorrectGuessed(true);
+      const savedMessage = localStorage.getItem('congratulatoryMessage');
+      setCongratulatoryMessage(savedMessage);
     }
   }, []);
 
-  // Save currentGuess and guesses to localStorage whenever they change
+  // Save currentGuess, guesses, and isCorrectGuessed to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem('guesses', JSON.stringify(guesses));
     localStorage.setItem('currentGuess', currentGuess);
-  }, [guesses, currentGuess]);
+    localStorage.setItem('isCorrectGuessed', isCorrectGuessed.toString());
+    localStorage.setItem('congratulatoryMessage', congratulatoryMessage);
+  }, [guesses, currentGuess, isCorrectGuessed, congratulatoryMessage]);
 
   const onKeyPress = (key) => {
     if (key === 'ENTER') {
       if (currentGuess.length === correctWord.length) {
         setGuesses([...guesses, currentGuess]);
+        if (currentGuess.toUpperCase() === correctWord) {
+          const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+          setCongratulatoryMessage(randomMessage);
+          setIsCorrectGuessed(true);
+        }
         setCurrentGuess('');
       }
     } else if (key === 'DELETE') {
@@ -78,16 +133,28 @@ const App = () => {
     };
   }, [currentGuess, guesses]);
 
+  const handleRefresh = () => {
+    localStorage.removeItem('guesses');
+    localStorage.removeItem('currentGuess');
+    localStorage.removeItem('isCorrectGuessed');
+    localStorage.removeItem('congratulatoryMessage');
+    window.location.reload();
+  };
+
   return (
     <div className="App">
       <h1>Wordle</h1>
-      {correctWord ? (
-        <>
-          <Board guesses={guesses} currentGuess={currentGuess} correctWord={correctWord} />
-          <Keyboard onKeyPress={onKeyPress} guesses={guesses} currentGuess={currentGuess} correctWord={correctWord} />
-        </>
+      {isCorrectGuessed ? (
+        <Congratulations message={congratulatoryMessage} onRefresh={handleRefresh} />
       ) : (
-        <p>Loading...</p>
+        correctWord ? (
+          <>
+            <Board guesses={guesses} currentGuess={currentGuess} correctWord={correctWord} />
+            <Keyboard onKeyPress={onKeyPress} guesses={guesses} currentGuess={currentGuess} correctWord={correctWord} />
+          </>
+        ) : (
+          <p>Loading...</p>
+        )
       )}
     </div>
   );
