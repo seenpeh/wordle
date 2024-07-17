@@ -3,8 +3,10 @@
 from django.http import JsonResponse
 import os
 
+
 def get_words(request):
-    words_file_path = os.path.join(os.path.dirname(__file__), 'words.txt')  # Update the path
+    words_file_path = os.path.join(os.path.dirname(
+        __file__), '../database/words.txt')  # Update the path
     try:
         with open(words_file_path, 'r') as file:
             words = [word.strip() for word in file.readlines() if word.strip()]

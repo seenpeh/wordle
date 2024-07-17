@@ -1,0 +1,26 @@
+.incorrect-guess {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.incorrect-guess h2 {
+  color: red;
+}
+
+.incorrect-guess p {
+  margin: 20px 0;
+}
+
+.incorrect-guess button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.incorrect-guess button:hover {
+  background-color: #0056b3;
+}
