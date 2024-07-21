@@ -9,18 +9,32 @@ const Board = ({ guesses, currentGuess, correctWord }) => {
     return Array.from({ length: rows }, () => Array(columns).fill(''));
   };
 
-  const getCellStyle = (letter, index, correctWord, guess) => {
-    if (!correctWord.includes(letter)) return 'wrong';
-    if (correctWord[index] === letter) return 'correct';
-    return 'misplaced';
+  const getCellStyle = (letter, index, correctWord, guess, letterCount) => {
+    if (correctWord[index] === letter) {
+      letterCount[letter]--;
+      return 'correct';
+    }
+
+    if (correctWord.includes(letter) && letterCount[letter] > 0) {
+      letterCount[letter]--;
+      return 'misplaced';
+    }
+
+    return 'wrong';
   };
 
   const board = createEmptyBoard();
 
   // Fill board with guesses
   guesses.forEach((guess, rowIndex) => {
+    // Create a count map for the correctWord
+    const letterCount = {};
+    correctWord.split('').forEach(letter => {
+      letterCount[letter] = (letterCount[letter] || 0) + 1;
+    });
+
     guess.split('').forEach((letter, colIndex) => {
-      board[rowIndex][colIndex] = { letter, style: getCellStyle(letter, colIndex, correctWord, guess) };
+      board[rowIndex][colIndex] = { letter, style: getCellStyle(letter, colIndex, correctWord, guess, letterCount) };
     });
   });
 
