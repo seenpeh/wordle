@@ -71,9 +71,26 @@ const App = () => {
     saveToLocalStorage();
   }, [guesses, currentGuess, isCorrectGuessed, congratulatoryMessage, isIncorrectGuessed]);
 
-  const onKeyPress = useCallback((key) => {
+  const validateWord = async (word) => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/validate_word/${word}/`);
+      const data = await response.json();
+      return data.is_valid;
+    } catch (error) {
+      console.error('Error validating the word:', error);
+      return false;
+    }
+  };
+
+  const onKeyPress = useCallback(async (key) => {
     if (key === 'ENTER') {
       if (currentGuess.length === correctWord.length) {
+        const isValidWord = await validateWord(currentGuess);
+        if (!isValidWord) {
+          alert("The word is not valid.");
+          return;
+        }
+
         const newGuesses = [...guesses, currentGuess];
         setGuesses(newGuesses);
         if (currentGuess.toUpperCase() === correctWord) {
